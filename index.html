@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agência Mult — Painel de Resultados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f1115;
+    --panel:#171a21;
+    --panel-2:#1d2129;
+    --thread:#8b93a3;
+    --thread-dim:#565d6b;
+    --paper:#e9ebf0;
+    --orange:#e8702a;
+    --orange-soft:#e8702a26;
+    --blue:#3e5fe0;
+    --blue-soft:#3e5fe026;
+    --red:#e14b4b;
+    --red-soft:#e14b4b22;
+    --green:#3fb27f;
+    --rule: repeating-linear-gradient(90deg, var(--thread-dim) 0 6px, transparent 6px 12px);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ink); color:var(--paper);
+    font-family:'Space Grotesk', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{color:inherit;}
+
+  /* ---------- layout shell ---------- */
+  .wrap{ max-width:1180px; margin:0 auto; padding:28px 20px 80px; }
+  header.top{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:28px; border-bottom:1px solid #2a2e38; padding-bottom:20px;}
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{ width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg, var(--orange), var(--blue)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; color:#fff; font-family:'JetBrains Mono',monospace;}
+  .eyebrow{ font-family:'JetBrains Mono', monospace; letter-spacing:.14em; text-transform:uppercase; font-size:11px; color:var(--thread); }
+  h1.month{ font-size:clamp(28px,4vw,42px); margin:4px 0 0; font-weight:700; letter-spacing:-.01em; }
+  .month-select{ display:flex; gap:8px; align-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--thread);}
+  .month-select select{ background:var(--panel); color:var(--paper); border:1px solid #2a2e38; border-radius:6px; padding:6px 10px; font-family:inherit; }
+
+  /* ---------- KPI strip (receipt totals) ---------- */
+  .kpi-strip{
+    background:var(--panel); border:1px solid #262a33; border-radius:14px;
+    padding:22px 24px; margin-bottom:34px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    position:relative; overflow:hidden;
+  }
+  .kpi-strip::before{
+    content:""; position:absolute; inset:0 0 auto 0; height:3px;
+    background:linear-gradient(90deg,var(--orange),var(--blue));
+  }
+  .kpi{ padding:6px 22px; border-left:1px dashed #333947; }
+  .kpi:first-child{ border-left:none; }
+  .kpi .label{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--thread); display:block; margin-bottom:8px;}
+  .kpi .value{ font-family:'JetBrains Mono',monospace; font-size:clamp(18px,2.6vw,26px); font-weight:700; }
+  .kpi .value.pos{ color:var(--orange); }
+  .kpi .sub{ font-size:11px; color:var(--thread-dim); margin-top:4px; font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- margin rail (bar chart, receipt-strip style) ---------- */
+  .section-title{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--thread); margin:0 0 14px; display:flex; align-items:center; gap:10px;}
+  .section-title::after{ content:""; flex:1; height:1px; background:#262a33; }
+
+  .rail{ margin-bottom:40px; }
+  .rail-row{ display:grid; grid-template-columns:160px 1fr 90px; align-items:center; gap:14px; padding:9px 0; border-bottom:1px solid #1f232c;}
+  .rail-row .rname{ font-size:13px; color:var(--paper); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .rail-bar-track{ height:8px; background:#20242d; border-radius:4px; overflow:hidden; }
+  .rail-bar-fill{ height:100%; border-radius:4px; background:linear-gradient(90deg,var(--blue),var(--orange)); }
+  .rail-row .rpct{ font-family:'JetBrains Mono',monospace; font-size:13px; text-align:right; }
+  .rail-row .rpct.neg{ color:var(--red); }
+
+  /* ---------- receipt cards grid ---------- */
+  .cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; margin-bottom:44px; }
+  .receipt{
+    background:var(--panel); border:1px solid #262a33; border-radius:4px;
+    position:relative; cursor:pointer; transition:border-color .15s ease, transform .15s ease;
+  }
+  .receipt:hover{ border-color:#3a4050; transform:translateY(-2px); }
+  .receipt::before{ /* torn top edge */
+    content:""; position:absolute; top:-1px; left:0; right:0; height:8px;
+    background-image: linear-gradient(135deg, var(--ink) 50%, transparent 50%), linear-gradient(45deg, var(--ink) 50%, transparent 50%);
+    background-size:12px 12px; background-position:0 0, 0 0; background-repeat:repeat-x;
+    background-color:var(--panel);
+  }
+  .receipt-head{ padding:20px 20px 14px; position:relative;}
+  .receipt-head .rc-name{ font-weight:700; font-size:16.5px; margin:0 0 2px; letter-spacing:-.005em;}
+  .receipt-head .rc-meta{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--thread); }
+  .receipt-badge{ position:absolute; top:18px; right:18px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; padding:4px 10px; border-radius:20px; }
+  .receipt-badge.ok{ background:var(--orange-soft); color:var(--orange); }
+  .receipt-badge.bad{ background:var(--red-soft); color:var(--red); }
+  .receipt-divider{ height:1px; background:var(--rule); margin:0 20px; opacity:.5;}
+  .receipt-lines{ padding:14px 20px 18px; font-family:'JetBrains Mono',monospace; font-size:12.5px; }
+  .rline{ display:flex; justify-content:space-between; padding:3px 0; color:var(--thread); }
+  .rline b{ color:var(--paper); font-weight:500; }
+  .rline.total{ margin-top:6px; padding-top:8px; border-top:1px dashed #333947; color:var(--paper); font-weight:700; font-size:13.5px;}
+  .rline.total .val.pos{ color:var(--orange); }
+  .rline.total .val.neg{ color:var(--red); }
+  .expand-hint{ text-align:center; padding:8px; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--thread-dim); letter-spacing:.08em; text-transform:uppercase; border-top:1px solid #21252e;}
+
+  /* ---------- employee table (expanded) ---------- */
+  .emp-panel{ display:none; background:var(--panel-2); border:1px solid #262a33; border-top:none; border-radius:0 0 8px 8px; margin-top:-18px; margin-bottom:18px; padding:6px 0 10px; }
+  .emp-panel.open{ display:block; }
+  table.emp{ width:100%; border-collapse:collapse; font-size:12px; }
+  table.emp th{ text-align:left; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--thread); padding:10px 14px 6px; font-weight:500;}
+  table.emp td{ padding:7px 14px; border-top:1px solid #21252e; font-family:'JetBrains Mono',monospace; font-size:12px;}
+  table.emp td.name{ font-family:'Space Grotesk',sans-serif; font-size:12.5px; }
+  table.emp tr:hover td{ background:#1a1e26; }
+  .pct-cell.neg{ color:var(--red); font-weight:700;}
+  .pct-cell.pos{ color:var(--orange); }
+  .status-tag{ font-size:9.5px; padding:2px 6px; border-radius:10px; background:#262a33; color:var(--thread); }
+
+  /* ---------- folha interna ---------- */
+  .fi-card{ background:var(--panel); border:1px solid #262a33; border-radius:14px; padding:22px 24px; margin-bottom:44px; }
+  .fi-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; flex-wrap:wrap; gap:8px;}
+  .fi-head h3{ margin:0; font-size:16px; }
+  .fi-total{ font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--blue); font-size:18px; }
+
+  footer{ margin-top:30px; padding-top:20px; border-top:1px solid #262a33; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--thread-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+
+  @media (max-width:720px){
+    .kpi-strip{ grid-template-columns:repeat(2,1fr); }
+    .kpi{ border-left:none; border-top:1px dashed #333947; padding-top:14px; }
+    .kpi:nth-child(1), .kpi:nth-child(2){ border-top:none; }
+    .rail-row{ grid-template-columns:100px 1fr 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <div class="brand">
+        <div class="brand-mark">AM</div>
+        <span class="eyebrow">Agência Mult · Painel de Resultados</span>
+      </div>
+      <h1 class="month" id="mesTitulo">—</h1>
+    </div>
+    <div class="month-select">
+      <span>Competência:</span>
+      <select id="mesSelect"><option>Julho 2026</option></select>
+    </div>
+  </header>
+
+  <div class="kpi-strip">
+    <div class="kpi">
+      <span class="label">Faturado líquido</span>
+      <span class="value mono" id="kFaturado">—</span>
+      <span class="sub">total dos clientes, já sem tributos</span>
+    </div>
+    <div class="kpi">
+      <span class="label">Custo real</span>
+      <span class="value mono" id="kCusto">—</span>
+      <span class="sub">colaboradores faturáveis</span>
+    </div>
+    <div class="kpi">
+      <span class="label">Folha interna</span>
+      <span class="value mono" id="kFolha">—</span>
+      <span class="sub">equipe administrativa</span>
+    </div>
+    <div class="kpi">
+      <span class="label">Resultado final</span>
+      <span class="value mono pos" id="kResultado">—</span>
+      <span class="sub">margem clientes − folha interna</span>
+    </div>
+  </div>
+
+  <div class="rail">
+    <p class="section-title">Margem por cliente</p>
+    <div id="railList"></div>
+  </div>
+
+  <p class="section-title">Faturas do mês</p>
+  <div class="cards" id="cardsGrid"></div>
+
+  <div class="fi-card">
+    <div class="fi-head">
+      <div>
+        <h3>Folha Interna</h3>
+        <span class="mono" style="font-size:11px;color:var(--thread)">equipe administrativa — não faturável a cliente</span>
+      </div>
+      <div class="fi-total mono" id="fiTotal">—</div>
+    </div>
+    <table class="emp" id="fiTable"><thead><tr>
+      <th>Nome</th><th>Centro de custo</th><th>Função</th><th>Salário bruto</th><th>Custo real</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+
+  <footer>
+    <span id="footNote">Dados de julho/2026 · gerado a partir do FUNC + faturas do mês</span>
+    <span>Agência Mult</span>
+  </footer>
+
+</div>
+
+<script>
+const BRL = v => v==null ? '—' : v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const PCT = v => v==null ? '—' : (v*100).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%';
+
+fetch('data.json').then(r=>r.json()).then(render).catch(err=>{
+  document.getElementById('mesTitulo').textContent = 'Erro ao carregar data.json';
+  console.error(err);
+});
+
+function render(data){
+  document.getElementById('mesTitulo').textContent = data.mes;
+  document.getElementById('footNote').textContent = `Dados de ${data.mes.toLowerCase()} · gerado a partir do FUNC + faturas do mês`;
+
+  const c = data.consolidado;
+  document.getElementById('kFaturado').textContent = BRL(c.subtotal_faturado_liquido);
+  document.getElementById('kCusto').textContent = BRL(c.subtotal_custo);
+  document.getElementById('kFolha').textContent = BRL(c.folha_interna);
+  document.getElementById('kResultado').textContent = BRL(c.resultado_final);
+
+  // margin rail, sorted desc by margem %
+  const rail = document.getElementById('railList');
+  const sorted = [...data.clientes].sort((a,b)=>b.margem_pct-a.margem_pct);
+  const maxPct = Math.max(...sorted.map(x=>Math.abs(x.margem_pct)), 0.01);
+  sorted.forEach(cl=>{
+    const row = document.createElement('div');
+    row.className = 'rail-row';
+    const w = Math.min(100, Math.abs(cl.margem_pct)/maxPct*100);
+    row.innerHTML = `
+      <div class="rname">${cl.nome}</div>
+      <div class="rail-bar-track"><div class="rail-bar-fill" style="width:${w}%; ${cl.margem_pct<0?'background:var(--red)':''}"></div></div>
+      <div class="rpct ${cl.margem_pct<0?'neg':''}">${PCT(cl.margem_pct)}</div>
+    `;
+    rail.appendChild(row);
+  });
+
+  // client receipt cards
+  const grid = document.getElementById('cardsGrid');
+  data.clientes.forEach((cl, idx)=>{
+    const bad = cl.margem < 0;
+    const card = document.createElement('div');
+    card.innerHTML = `
+      <div class="receipt" data-idx="${idx}">
+        <div class="receipt-head">
+          <p class="rc-name">${cl.nome}</p>
+          <p class="rc-meta">${cl.n_colaboradores} colaborador${cl.n_colaboradores>1?'es':''}</p>
+          <div class="receipt-badge ${bad?'bad':'ok'}">${PCT(cl.margem_pct)}</div>
+        </div>
+        <div class="receipt-lines">
+          <div class="rline"><span>Faturado bruto</span><b>${BRL(cl.faturado_bruto)}</b></div>
+          <div class="rline"><span>Tributos</span><b>${BRL(cl.tributos)}</b></div>
+          <div class="rline"><span>Custo real</span><b>${BRL(cl.custo_real)}</b></div>
+          <div class="rline total"><span>Margem</span><span class="val ${bad?'neg':'pos'}">${BRL(cl.margem)}</span></div>
+        </div>
+        <div class="expand-hint">ver colaboradores ▾</div>
+      </div>
+      <div class="emp-panel" id="panel-${idx}">
+        <table class="emp"><thead><tr>
+          <th>Nome</th><th>Sub-cliente</th><th>Status</th><th>Custo real</th><th>Faturado líq.</th><th>Margem</th><th>%</th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    const tbody = card.querySelector('.emp-panel tbody');
+    [...cl.colaboradores].sort((a,b)=>b.margem-a.margem).forEach(e=>{
+      const tr = document.createElement('tr');
+      const negE = e.margem < 0;
+      tr.innerHTML = `
+        <td class="name">${e.nome}</td>
+        <td>${e.sub_cliente||''}</td>
+        <td><span class="status-tag">${e.status||''}</span></td>
+        <td>${BRL(e.custo_real)}</td>
+        <td>${BRL(e.faturado_liquido)}</td>
+        <td>${BRL(e.margem)}</td>
+        <td class="pct-cell ${negE?'neg':'pos'}">${PCT(e.margem_pct)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    card.querySelector('.receipt').addEventListener('click', ()=>{
+      const panel = card.querySelector('.emp-panel');
+      const hint = card.querySelector('.expand-hint');
+      panel.classList.toggle('open');
+      hint.textContent = panel.classList.contains('open') ? 'ocultar colaboradores ▴' : 'ver colaboradores ▾';
+    });
+  });
+
+  // folha interna
+  document.getElementById('fiTotal').textContent = BRL(data.folha_interna.total_custo);
+  const fiBody = document.querySelector('#fiTable tbody');
+  data.folha_interna.colaboradores.forEach(p=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="name">${p.nome}</td>
+      <td>${p.cliente}</td>
+      <td>${p.funcao}</td>
+      <td>${BRL(p.salario_bruto)}</td>
+      <td>${BRL(p.custo_real)}</td>
+    `;
+    fiBody.appendChild(tr);
+  });
+}
+</script>
+</body>
+</html>
