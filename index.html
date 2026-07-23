@@ -200,7 +200,22 @@
 const BRL = v => v==null ? '—' : v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
 const PCT = v => v==null ? '—' : (v*100).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%';
 
-fetch('data.json').then(r=>r.json()).then(render).catch(err=>{
+let MESES = [];
+
+fetch('data.json').then(r=>r.json()).then(payload=>{
+  MESES = payload.meses || [payload]; // aceita formato antigo (um único mês) também
+  const select = document.getElementById('mesSelect');
+  select.innerHTML = '';
+  // mais recente primeiro no seletor
+  [...MESES].reverse().forEach((m, i)=>{
+    const opt = document.createElement('option');
+    opt.value = MESES.indexOf(m);
+    opt.textContent = m.mes;
+    select.appendChild(opt);
+  });
+  select.addEventListener('change', ()=> render(MESES[+select.value]));
+  render(MESES[MESES.length-1]); // mês mais recente por padrão
+}).catch(err=>{
   document.getElementById('mesTitulo').textContent = 'Erro ao carregar data.json';
   console.error(err);
 });
@@ -217,6 +232,7 @@ function render(data){
 
   // margin rail, sorted desc by margem %
   const rail = document.getElementById('railList');
+  rail.innerHTML = '';
   const sorted = [...data.clientes].sort((a,b)=>b.margem_pct-a.margem_pct);
   const maxPct = Math.max(...sorted.map(x=>Math.abs(x.margem_pct)), 0.01);
   sorted.forEach(cl=>{
@@ -233,6 +249,7 @@ function render(data){
 
   // client receipt cards
   const grid = document.getElementById('cardsGrid');
+  grid.innerHTML = '';
   data.clientes.forEach((cl, idx)=>{
     const bad = cl.margem < 0;
     const card = document.createElement('div');
@@ -286,6 +303,7 @@ function render(data){
   // folha interna
   document.getElementById('fiTotal').textContent = BRL(data.folha_interna.total_custo);
   const fiBody = document.querySelector('#fiTable tbody');
+  fiBody.innerHTML = '';
   data.folha_interna.colaboradores.forEach(p=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
