@@ -266,7 +266,7 @@ function render(data){
           <div class="receipt-badge ${bad?'bad':'ok'}">${PCT(cl.margem_pct)}</div>
         </div>
         <div class="receipt-lines">
-          <div class="rline"><span>Tributos</span><b>${BRL(cl.tributos)}</b></div>
+          <div class="rline"><span>Impostos Fiscais</span><b>${BRL(cl.tributos)}</b></div>
           <div class="rline"><span>Custo real</span><b>${BRL(cl.custo_real)}</b></div>
           <div class="rline total"><span>Margem</span><span class="val ${bad?'neg':'pos'}">${BRL(cl.margem)}</span></div>
         </div>
@@ -274,7 +274,7 @@ function render(data){
       </div>
       <div class="emp-panel" id="panel-${idx}">
         <table class="emp"><thead><tr>
-          <th>Nome</th><th>Função</th><th>Custo real</th><th>Tributos</th><th>Faturado bruto</th><th>Margem</th><th>%</th>
+          <th>Nome</th><th>Função</th><th>Custo real</th><th>Impostos Fiscais</th><th>Faturado bruto</th><th>Margem</th><th>%</th>
         </tr></thead><tbody></tbody></table>
       </div>
     `;

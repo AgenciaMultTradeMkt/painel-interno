@@ -454,11 +454,11 @@
           "sheet": "ANÁLISE INGLEZA GUANABARA",
           "nome": "Ingleza Guanabara",
           "n_colaboradores": 26,
-          "custo_real": 96469.1764119008,
+          "custo_real": 96194.3564119008,
           "tributos": 23922.3412119008,
           "faturado_bruto": 113915.910532861,
-          "margem": 17446.73412096,
-          "margem_pct": 0.153154498255336,
+          "margem": 17721.55412096,
+          "margem_pct": 0.15556697952081,
           "colaboradores": [
             {
               "nome": "ADRIENE TAILLER DE CASTRO TORQUATO",
@@ -580,11 +580,11 @@
             {
               "nome": "JULIO OLIVEIRA DE MENEZES",
               "funcao": "PROMOTOR",
-              "custo_real": 4868.94767877671,
+              "custo_real": 4594.12767877671,
               "tributos": 1250.25597877671,
               "faturado_bruto": 5953.59989893671,
-              "margem": 1084.65222016,
-              "margem_pct": 0.1821842647427
+              "margem": 1359.47222016,
+              "margem_pct": 0.228344571895534
             },
             {
               "nome": "MIRIAN BELIZARDO PIMENTEL",
@@ -700,11 +700,11 @@
           "sheet": "ANÁLISE JOSAPAR",
           "nome": "Josapar",
           "n_colaboradores": 14,
-          "custo_real": 52020.8993276025,
+          "custo_real": 51430.7293276025,
           "tributos": 11339.9886276025,
           "faturado_bruto": 66315.7229684359,
-          "margem": 14294.8236408333,
-          "margem_pct": 0.215557080598174,
+          "margem": 14884.9936408333,
+          "margem_pct": 0.224456478411886,
           "colaboradores": [
             {
               "nome": "Adriana Pires do Sacramento Rosa",
@@ -826,11 +826,11 @@
             {
               "nome": "Thiago Souza da Silva",
               "funcao": "PROMOTOR",
-              "custo_real": 4534.84058832931,
+              "custo_real": 3944.67058832931,
               "tributos": 1020.34888832931,
               "faturado_bruto": 5966.95256332931,
-              "margem": 1432.111975,
-              "margem_pct": 0.240007266657562
+              "margem": 2022.281975,
+              "margem_pct": 0.338913700676657
             }
           ]
         },
@@ -1077,13 +1077,13 @@
         "total_custo": 36966.48
       },
       "consolidado": {
-        "subtotal_custo": 368397.091289146,
+        "subtotal_custo": 367532.101289146,
         "subtotal_tributos": 89372.1439391462,
         "subtotal_faturado_bruto": 450567.808344009,
-        "subtotal_margem": 82170.7170548627,
+        "subtotal_margem": 83035.7070548627,
         "folha_interna": 36966.48,
         "outras_despesas": 0,
-        "resultado_final": 45204.2370548627
+        "resultado_final": 46069.2270548627
       }
     },
     {
@@ -1504,11 +1504,11 @@
           "sheet": "ANÁLISE JOSAPAR",
           "nome": "Josapar",
           "n_colaboradores": 13,
-          "custo_real": 54077.3045690591,
+          "custo_real": 53487.1345690591,
           "tributos": 11765.6606690591,
           "faturado_bruto": 68805.0331523925,
-          "margem": 14727.7285833333,
-          "margem_pct": 0.214050163317467,
+          "margem": 15317.8985833333,
+          "margem_pct": 0.222627588150515,
           "colaboradores": [
             {
               "nome": "Adriana Pires do Sacramento Rosa",
@@ -1612,11 +1612,11 @@
             {
               "nome": "Thiago Souza da Silva",
               "funcao": "PROMOTOR",
-              "custo_real": 5226.84503947527,
+              "custo_real": 4636.67503947527,
               "tributos": 1035.29333947527,
               "faturado_bruto": 6054.34701447527,
-              "margem": 827.501975,
-              "margem_pct": 0.136678980081838
+              "margem": 1417.671975,
+              "margem_pct": 0.234157700510146
             },
             {
               "nome": "WELLINGTON DA SILVA MONSOR ",
@@ -1750,11 +1750,11 @@
           "sheet": "ANÁLISE INGLEZA GUANABARA",
           "nome": "Ingleza Guanabara",
           "n_colaboradores": 29,
-          "custo_real": 100768.185802767,
+          "custo_real": 100493.365802767,
           "tributos": 25290.128402767,
           "faturado_bruto": 120429.182870319,
-          "margem": 19660.997067552,
-          "margem_pct": 0.163257746992466,
+          "margem": 19935.817067552,
+          "margem_pct": 0.165539752013591,
           "colaboradores": [
             {
               "nome": "ALEX SANDER IGOR BARBOSA FERREIRA",
@@ -1876,11 +1876,11 @@
             {
               "nome": "JULIO OLIVEIRA DE MENEZES",
               "funcao": "PROMOTOR",
-              "custo_real": 5423.76489396658,
+              "custo_real": 5148.94489396658,
               "tributos": 1258.69319396658,
               "faturado_bruto": 5993.77711412658,
-              "margem": 570.012220159999,
-              "margem_pct": 0.09510067012945
+              "margem": 844.83222016,
+              "margem_pct": 0.140951557602774
             },
             {
               "nome": "MIRIAN BELIZARDO PIMENTEL",
@@ -2211,13 +2211,13 @@
         "total_custo": 41482.1
       },
       "consolidado": {
-        "subtotal_custo": 396569.1722168,
+        "subtotal_custo": 395704.1822168,
         "subtotal_tributos": 96887.1613668002,
         "subtotal_faturado_bruto": 491040.599807186,
-        "subtotal_margem": 94471.4275903853,
+        "subtotal_margem": 95336.4175903854,
         "folha_interna": 41482.1,
         "outras_despesas": 0,
-        "resultado_final": 52989.3275903853
+        "resultado_final": 53854.3175903854
       }
     }
   ]
