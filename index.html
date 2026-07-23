@@ -207,7 +207,7 @@ const PCT = v => v==null ? '—' : (v*100).toLocaleString('pt-BR',{maximumFracti
 
 let MESES = [];
 
-fetch('data.json').then(r=>r.json()).then(payload=>{
+fetch('data.json?v=' + Date.now(), {cache: 'no-store'}).then(r=>r.json()).then(payload=>{
   MESES = payload.meses || [payload]; // aceita formato antigo (um único mês) também
   const select = document.getElementById('mesSelect');
   select.innerHTML = '';
